@@ -54,14 +54,13 @@ regd_users.post("/login", (req,res) => {
 // Add a book review
 regd_users.put("/auth/review/:isbn", (req, res) => {
   const isbn = req.params.isbn;
-  // console.log(req.session);
+  const reviewer_name = req.session.authorization.username;
+
   if (isbn) {
     const book = books[isbn];
-    if (book) {
-        const reviewer_name = req.session.authorization.username;
+    if (book) {      
         const review_text = req.body.review_text;
-        books[isbn].reviews[reviewer_name] = review_text;
-        
+        books[isbn].reviews[reviewer_name] = review_text;        
         return res.status(200).json({message: "Review added."});  
     } else {
         return res.status(404).json({message: "Book not found."});  
@@ -69,6 +68,23 @@ regd_users.put("/auth/review/:isbn", (req, res) => {
   }
   return res.status(400).json({message: "Parameter error. ISBN is mandatory"});
 });
+
+// Delete a book review
+regd_users.delete("/auth/review/:isbn", (req, res) => {
+    const isbn = req.params.isbn;
+    const reviewer_name = req.session.authorization.username;
+
+    if (isbn) {
+      const book = books[isbn];
+      if (book) {
+          delete books[isbn].reviews[reviewer_name];
+          return res.status(200).json({message: "Review deleted."});  
+      } else {
+          return res.status(404).json({message: "Book not found."});  
+      }
+    }
+    return res.status(400).json({message: "Parameter error. ISBN is mandatory"});
+  });
 
 module.exports.authenticated = regd_users;
 module.exports.isValid = isValid;
