@@ -2,6 +2,8 @@ const express = require('express');
 let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
+const axios = require('axios');
+
 const public_users = express.Router();
 
 // Check if a user with the given username already exists
@@ -107,5 +109,44 @@ public_users.get('/review/:isbn',function (req, res) {
     }
     return res.status(400).json({message: "Parameter error. ISBN is mandatory"});
 });
+
+// Task 10
+let url="http://localhost:5000/";
+const getBookDetails=async(url)=>{
+    let resp = await axios.get(url);
+    let books = resp.data;
+      
+    console.log(books);
+}
+
+// Task 11
+url="http://localhost:5000/isbn/";
+let isbn = 8;
+const getBookDetailsByISBN=async(url,isbn)=>{
+    let resp = await axios.get(url+isbn);
+    let book = resp.data;
+
+    console.log(book[isbn]);
+}
+
+// Task 12
+url="http://localhost:5000/author/";
+let author = "Jane Austen";
+const getBookDetailsByAuthor=async(url,author)=>{
+    let resp = await axios.get(url+author);
+    let books = resp.data;
+      
+    console.log(books);
+}
+
+// Task 13
+url="http://localhost:5000/title/";
+let title = "Pride and Prejudice";
+const getBookDetailsByTitle=async(url,title)=>{
+    let resp = await axios.get(url+title);
+    let books = resp.data;  
+
+    console.log(books);
+}
 
 module.exports.general = public_users;
