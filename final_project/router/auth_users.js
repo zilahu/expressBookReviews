@@ -26,6 +26,8 @@ const authenticatedUser = (username,password)=>{ //returns boolean
 regd_users.post("/login", (req,res) => {
     const username = req.body.username;
     const password = req.body.password;
+    
+    console.log(users);
 
     // Check if username or password is missing
     if (!username || !password) {
@@ -37,7 +39,7 @@ regd_users.post("/login", (req,res) => {
         // Generate JWT access token
         let accessToken = jwt.sign({
             data: password
-        }, 'access', { expiresIn: 60  }); // 60x60
+        }, 'access', { expiresIn: 60*60  }); // 60x60
 
         // Store access token and username in session
         req.session.authorization = {
