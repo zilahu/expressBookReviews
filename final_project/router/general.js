@@ -53,16 +53,23 @@ public_users.get('/isbn/:isbn',function (req, res) {
             return res.status(404).json({message: "Book not found."});  
         }
     }
-
     return res.status(400).json({message: "Parameter error. ISBN is mandatory"});
  });
   
 // Get book details based on author
 public_users.get('/author/:author',function (req, res) {
   const author = req.params.author;
-  const book = books[author];
-  if (book) {
-    res.send(books[author]);  
+  const keys = Object.keys(books);
+  let book = [];
+  
+  for (const key of keys) {
+    if (books[key].author === author) {
+        book.push(books[key]); 
+    }
+  }
+
+  if (book.length) {
+    res.send(book);  
   } else {
     return res.status(404).json({message: "Author not found!"});
   }
